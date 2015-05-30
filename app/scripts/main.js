@@ -2,7 +2,7 @@
 
 var gallery = document.getElementById("gallery")
 
-var txt = "";
+var img = "";
 var images = [
 	"Slides_004",
 	"Slides_032",
@@ -29,10 +29,11 @@ var images = [
 var imageTag = "<img class='galleryimg' src='images/{image}.jpg' />";
 
 images.map( function (image) {
-	txt += "<li>"
-	txt += '<span class="glyphicon glyphicon glyphicon-ok-circle" aria-hidden="true"></span>';
-	txt += imageTag.replace('{image}', image);
-	txt += "</li>"
+	img += "<li>";
+	img += "<div></div>"
+	img += '<span class="glyphicon glyphicon glyphicon-ok-circle" aria-hidden="true"></span>';
+	img += imageTag.replace('{image}', image);
+	img += "</li>";
 });
 
-gallery.innerHTML = txt;
+gallery.innerHTML = img;
