@@ -7,7 +7,7 @@ var kids;
 //drops in default images
 srcImages.map( function (image) {
 	li += "<li>";
-	li += "<div></div>";
+	li += "<div data-toggle='modal' data-target='#myModal'	></div>";
 	li += '<img class="galleryimg" data-img="'+image+'" src="images/'+image+'.jpg" />';
 	li += '<span class="glyphicon glyphicon glyphicon-ok-circle" aria-hidden="true"></span>';
 	li += "</li>";
@@ -20,5 +20,7 @@ kids = gallery.children;
 for (var i = 0;i<kids.length;i++) {
 	kids[i].addEventListener('click', function(e) {
 		var slide = e.target.nextSibling.getAttribute('data-img');
+
+
 	});
 }
