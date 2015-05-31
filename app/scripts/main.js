@@ -8,10 +8,19 @@ var imageTag = "<img class='galleryimg' src='images/{image}.jpg' />";
 images.map( function (image) {
 	img += "<li>";
 	img += "<div></div>";
+	img += '<img class="galleryimg" src="images/'+image+'.jpg" />';
 	img += '<span class="glyphicon glyphicon glyphicon-ok-circle" aria-hidden="true"></span>';
-	img += imageTag.replace('{image}', image);
 	img += "</li>";
 });
 
-
 gallery.innerHTML = img;
+
+
+var kids = gallery.children;
+
+
+for (var i = 0;i<kids.length;i++) {
+	kids[i].addEventListener('click', function(e) {
+		console.log(e.target.nextSibling);
+	});
+}
