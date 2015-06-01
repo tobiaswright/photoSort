@@ -23,7 +23,32 @@ var setNavigation = function() {
 		navli += '<li><a>'+nav.setName+'</a></li>';
 	});
 	nav.innerHTML = navli;
-}
+
+	nav.addEventListener('click', function(e) {
+		e.preventDefault();
+
+		var galleryArray = [];
+		var galleryTitle = e.target.textContent;
+
+		title.innerHTML = galleryTitle
+
+		if ( galleryTitle === 'All Images') {
+			galleryArray = 'all';
+		} else {
+			sets.map( function( set ) {
+				if (set.setName === galleryTitle) {
+					title.innerHTML += '('+ set.images.length + ')';
+					set.images.map( function(images) {
+						galleryArray.push(srcImages[images]);
+					});
+				}
+			});
+		}
+
+		gridLayout( galleryArray );
+
+	});
+};
 
 
 var bindImages = function(i, kids) {
@@ -37,7 +62,10 @@ var bindImages = function(i, kids) {
 //drops in default images
 var gridLayout = function(imageArray) {
 
-	imageArray = (imageArray === 'all' || imageArray === undefined ) ? srcImages : imageArray;
+	if (imageArray === 'all' || imageArray === undefined ) {
+		imageArray = srcImages;
+		title.innerHTML += ' ('+ srcImages.length + ')'
+	}
 
 	var li = '';
 
@@ -58,31 +86,6 @@ var gridLayout = function(imageArray) {
 		bindImages(i, kids);
 	}
 };
-
-nav.addEventListener('click', function(e) {
-	e.preventDefault();
-
-	var galleryArray = [];
-
-	var gallery = e.target.textContent
-
-	title.innerHTML = gallery;
-
-	if ( gallery === "All Images") {
-		galleryArray = 'all'
-	} else {
-		sets.map( function( set ) {
-			if (set.setName === gallery) {
-				set.images.map( function(images) {
-					galleryArray.push(srcImages[images])
-				})
-			}
-		});
-	}
-
-	gridLayout( galleryArray )
-
-});
 
 var init = function() {
 	gridLayout();
