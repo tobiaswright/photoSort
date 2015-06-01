@@ -3,6 +3,7 @@
 var gallery = document.getElementById('gallery');
 var nav = document.getElementById('nav');
 var modalimage = document.getElementById('modalimage');
+var title = document.getElementById('title');
 var srcImages = ['Slides_004','Slides_032','Slides_066','Slides_067','Slides_070','Slides_073','Slides_074','Slides_086','Slides_098','Slides_102','Slides_106','Slides_111','Slides_113','Slides_119','Slides_120','Slides_127','Slides_129','Slides_130','Slides_131','Slides_133'];
 var navli = '';
 var sets = [
@@ -11,18 +12,16 @@ var sets = [
 		},
 		{
 			setName: 'Test collection',
-			photos: [0,1,13]
+			images: [0,1,13]
 		}
 	];
 var kids;
 
 
 var setNavigation = function() {
-
 	sets.map( function( nav ) {
 		navli += '<li><a>'+nav.setName+'</a></li>';
 	});
-
 	nav.innerHTML = navli;
 }
 
@@ -35,10 +34,11 @@ var bindImages = function(i, kids) {
 	});
 };
 
-
-
 //drops in default images
-var pageLayout = function(imageArray) {
+var gridLayout = function(imageArray) {
+
+	imageArray = (imageArray === 'all' || imageArray === undefined ) ? srcImages : imageArray;
+
 	var li = '';
 
 	imageArray.map( function (image) {
@@ -49,26 +49,44 @@ var pageLayout = function(imageArray) {
 		li += '</li>';
 	});
 
+
 	gallery.innerHTML = li;
 
 	kids = gallery.children;
 
-
 	for (var i = 0;i<kids.length;i++) {
 		bindImages(i, kids);
 	}
-
-	setNavigation();
 };
 
 nav.addEventListener('click', function(e) {
 	e.preventDefault();
 
-	console.log(e.target);
+	var galleryArray = [];
+
+	var gallery = e.target.textContent
+
+	title.innerHTML = gallery;
+
+	if ( gallery === "All Images") {
+		galleryArray = 'all'
+	} else {
+		sets.map( function( set ) {
+			if (set.setName === gallery) {
+				set.images.map( function(images) {
+					galleryArray.push(srcImages[images])
+				})
+			}
+		});
+	}
+
+	gridLayout( galleryArray )
+
 });
 
 var init = function() {
-	pageLayout( srcImages );
+	gridLayout();
+	setNavigation();
 };
 
 init();
