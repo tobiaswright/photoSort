@@ -4,8 +4,10 @@ var gallery = document.getElementById('gallery');
 var nav = document.getElementById('nav');
 var modalimage = document.getElementById('modalimage');
 var title = document.getElementById('title');
+var addIamge = document.getElementById('addIamge');
+var collectionDropdown = document.getElementById('collectionDropdown');
+var newCollection = document.getElementById('newCollection');
 var srcImages = ['Slides_004','Slides_032','Slides_066','Slides_067','Slides_070','Slides_073','Slides_074','Slides_086','Slides_098','Slides_102','Slides_106','Slides_111','Slides_113','Slides_119','Slides_120','Slides_127','Slides_129','Slides_130','Slides_131','Slides_133'];
-var navli = '';
 var sets = [
 		{
 			setName: 'All Images'
@@ -16,12 +18,19 @@ var sets = [
 		}
 	];
 var kids;
+var slide;
 
 
-var setNavigation = function() {
+var setCollections = function() {
+	var navli = '';
+	var options = '';
+
 	sets.map( function( nav ) {
 		navli += '<li><a>'+nav.setName+'</a></li>';
+		options += '<option value="'+nav.setName+'">'+nav.setName+'</option>';
 	});
+
+	collectionDropdown.innerHTML = options;
 	nav.innerHTML = navli;
 
 	nav.addEventListener('click', function(e) {
@@ -51,9 +60,26 @@ var setNavigation = function() {
 };
 
 
+addIamge.addEventListener('click', function(e) {
+	if ( collectionDropdown.value !== 'All Images' && newCollection.value === '' ) {
+		sets.map( function( set ) {
+			if (set.setName === collectionDropdown.value) {
+				set.images.push( srcImages.indexOf(slide) )
+			}
+		});
+		
+	} else {
+		sets.push({setName: newCollection.value, images: [ srcImages.indexOf(slide) ] })
+	}
+
+	newCollection.value = '';
+	setCollections();
+
+});
+
 var bindImages = function(i, kids) {
 	kids[i].addEventListener('click', function(e) {
-		var slide = e.target.nextSibling.getAttribute('data-img');
+		slide = e.target.nextSibling.getAttribute('data-img');
 		var slideCont = '<img src="images/'+slide+'.jpg" />';
 		modalimage.innerHTML = slideCont;
 	});
@@ -89,7 +115,7 @@ var gridLayout = function(imageArray) {
 
 var init = function() {
 	gridLayout();
-	setNavigation();
+	setCollections();
 };
 
 init();
