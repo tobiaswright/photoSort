@@ -8,6 +8,7 @@ var addIamge = document.getElementById('addIamge');
 var collectionDropdown = document.getElementById('collectionDropdown');
 var newCollection = document.getElementById('newCollection');
 var modalAlert = document.getElementById('modalAlert');
+var deleteImage = document.getElementById('deleteImage');
 var srcImages = ['Slides_004','Slides_032','Slides_066','Slides_067','Slides_070','Slides_073','Slides_074','Slides_086','Slides_098','Slides_102','Slides_106','Slides_111','Slides_113','Slides_119','Slides_120','Slides_127','Slides_129','Slides_130','Slides_131','Slides_133'];
 var sets = [
 		{
@@ -20,7 +21,7 @@ var sets = [
 	];
 var kids;
 var slide;
-
+var currentGallery
 
 var setCollections = function() {
 	var navli = '';
@@ -38,15 +39,15 @@ var setCollections = function() {
 		e.preventDefault();
 
 		var galleryArray = [];
-		var galleryTitle = e.target.textContent;
+		currentGallery = e.target.textContent;
 
-		title.innerHTML = galleryTitle
+		title.innerHTML = currentGallery
 
-		if ( galleryTitle === 'All Images') {
+		if ( currentGallery === 'All Images') {
 			galleryArray = 'all';
 		} else {
 			sets.map( function( set ) {
-				if (set.setName === galleryTitle) {
+				if (set.setName === currentGallery) {
 					title.innerHTML += '('+ set.images.length + ')';
 					set.images.map( function(images) {
 						galleryArray.push(srcImages[images]);
@@ -78,7 +79,8 @@ addIamge.addEventListener('click', function(e) {
 		});
 		
 	} else {
-		sets.push({setName: newCollection.value, images: [ srcImages.indexOf(slide) ] })
+		sets.push({setName: newCollection.value, images: [ srcImages.indexOf(slide) ] });
+		$('#myModal').modal('hide');
 	}
 
 	var destroyAlert = setTimeout( function() {
@@ -90,16 +92,46 @@ addIamge.addEventListener('click', function(e) {
 
 });
 
+
+deleteImage.addEventListener('click', function(e) {
+	var index;
+	var updateCollection;
+	var newCollection = []
+
+	for (var i = 0;i<sets.length;i++) {
+		console.log(sets[i].setName, currentGallery)
+		if (sets[i].setName === currentGallery) {
+
+			index = sets[i].images.indexOf(srcImages.indexOf(slide));
+			console.log(index, srcImages.indexOf(slide))
+			if (index > -1) {
+				sets[i].images.splice(index, 1);
+				updateCollection = sets[i].images
+			}
+		}
+	};
+
+	updateCollection.map (function( image) {
+		newCollection.push(srcImages[image])
+	})
+
+
+	gridLayout( newCollection );
+});
+
 var bindImages = function(i, kids) {
 	kids[i].addEventListener('click', function(e) {
-		slide = e.target.nextSibling.getAttribute('data-img');
+		slide = e.target.parentNode.attributes[0].value;
 		var slideCont = '<img src="images/'+slide+'.jpg" />';
 		modalimage.innerHTML = slideCont;
+		addmodalIamge.innerHTML = slideCont
 	});
 };
 
 //drops in default images
 var gridLayout = function(imageArray) {
+
+	console.log(imageArray)
 
 	if (imageArray === 'all' || imageArray === undefined ) {
 		imageArray = srcImages;
@@ -109,10 +141,11 @@ var gridLayout = function(imageArray) {
 	var li = '';
 
 	imageArray.map( function (image) {
-		li += '<li>';
-		li += '<div data-toggle="modal" data-target="#myModal"></div>';
-		li += '<img class="galleryimg" data-img="'+image+'" src="images/'+image+'.jpg" />';
-		li += '<span class="glyphicon glyphicon glyphicon-ok-circle" aria-hidden="true"></span>';
+		li += '<li data-img="'+image+'">';
+		li += '<div></div>';
+		li += '<img class="galleryimg" src="images/'+image+'.jpg" />';
+		li += '<span data-toggle="modal" data-target="#addModal" class="glyphicon glyphicon-plus-sign" aria-hidden="true"></span>';
+		li += '<span data-toggle="modal" data-target="#removeModal" class="glyphicon glyphicon-minus-sign aria-hidden="true"></span>';
 		li += '</li>';
 	});
 
