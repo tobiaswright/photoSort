@@ -45,6 +45,7 @@ var setCollections = function() {
 
 		if ( currentGallery === 'All Images') {
 			galleryArray = 'all';
+			gallery.classList.add("allimages");
 		} else {
 			sets.map( function( set ) {
 				if (set.setName === currentGallery) {
@@ -54,6 +55,7 @@ var setCollections = function() {
 					});
 				}
 			});
+			gallery.classList.remove("allimages");
 		}
 
 		gridLayout( galleryArray );
@@ -124,7 +126,6 @@ var bindImages = function(i, kids) {
 		var slideCont = '<img src="images/'+slide+'.jpg" />';
 		modalimage.innerHTML = slideCont;
 
-		console.log( selectedImage )
 		if ( selectedImage.classList.contains("deleteImage") ) {
 			deleteImage();
 		}
@@ -132,8 +133,6 @@ var bindImages = function(i, kids) {
 };
 //drops in default images
 var gridLayout = function(imageArray) {
-
-	console.log(imageArray)
 
 	if (imageArray === 'all' || imageArray === undefined ) {
 		imageArray = srcImages;
