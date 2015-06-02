@@ -93,17 +93,15 @@ addIamge.addEventListener('click', function(e) {
 });
 
 
-deleteImage.addEventListener('click', function(e) {
+var deleteImage = function() {
 	var index;
 	var updateCollection;
 	var newCollection = []
 
 	for (var i = 0;i<sets.length;i++) {
-		console.log(sets[i].setName, currentGallery)
 		if (sets[i].setName === currentGallery) {
 
 			index = sets[i].images.indexOf(srcImages.indexOf(slide));
-			console.log(index, srcImages.indexOf(slide))
 			if (index > -1) {
 				sets[i].images.splice(index, 1);
 				updateCollection = sets[i].images
@@ -117,17 +115,21 @@ deleteImage.addEventListener('click', function(e) {
 
 
 	gridLayout( newCollection );
-});
+};
 
 var bindImages = function(i, kids) {
 	kids[i].addEventListener('click', function(e) {
-		slide = e.target.parentNode.attributes[0].value;
+		var selectedImage = e.target
+		slide = selectedImage.parentNode.attributes[0].value;
 		var slideCont = '<img src="images/'+slide+'.jpg" />';
 		modalimage.innerHTML = slideCont;
-		addmodalIamge.innerHTML = slideCont
+
+		console.log( selectedImage )
+		if ( selectedImage.classList.contains("deleteImage") ) {
+			deleteImage();
+		}
 	});
 };
-
 //drops in default images
 var gridLayout = function(imageArray) {
 
@@ -145,7 +147,7 @@ var gridLayout = function(imageArray) {
 		li += '<div></div>';
 		li += '<img class="galleryimg" src="images/'+image+'.jpg" />';
 		li += '<span data-toggle="modal" data-target="#addModal" class="glyphicon glyphicon-plus-sign" aria-hidden="true"></span>';
-		li += '<span data-toggle="modal" data-target="#removeModal" class="glyphicon glyphicon-minus-sign aria-hidden="true"></span>';
+		li += '<span class="deleteImage glyphicon glyphicon-minus-sign aria-hidden="true"></span>';
 		li += '</li>';
 	});
 
