@@ -12,20 +12,17 @@ var deleteImage = document.getElementById('deleteImage');
 var addCollection = document.getElementById('addCollection');
 var newEmptyCollection = document.getElementById('newEmptyCollection');
 var content = document.getElementById('content');
-var deleteCollection = document.getElementById('deleteCollection')
+var deleteCollection = document.getElementById('deleteCollection');
 var srcImages = ['Slides_004','Slides_032','Slides_066','Slides_067','Slides_070','Slides_073','Slides_074','Slides_086','Slides_098','Slides_102','Slides_106','Slides_111','Slides_113','Slides_119','Slides_120','Slides_127','Slides_129','Slides_130','Slides_131','Slides_133'];
 var sets = [
 		{
 			setName: 'All Images'
-		},
-		{
-			setName: 'Test collection',
-			images: [0,1,13]
 		}
 	];
 var kids;
 var slide;
-var currentGallery
+var currentGallery;
+var destroyAlert
 
 var setCollections = function() {
 	var navli = '';
@@ -45,15 +42,15 @@ var setCollections = function() {
 		var galleryArray = [];
 		currentGallery = e.target.textContent;
 
-		title.innerHTML = currentGallery
+		title.innerHTML = currentGallery;
 
 		if ( currentGallery === 'All Images') {
 			galleryArray = 'all';
-			content.classList.add("allimages");
+			content.classList.add('allimages');
 		} else {
 			sets.map( function( set ) {
 				if (set.setName === currentGallery) {
-					var number = (set.images === undefined) ? 0 : set.images.length
+					var number = (set.images === undefined) ? 0 : set.images.length;
 					title.innerHTML += '('+ number + ')';
 
 					if (!set.images) {
@@ -64,7 +61,7 @@ var setCollections = function() {
 					});
 				}
 			});
-			content.classList.remove("allimages");
+			content.classList.remove('allimages');
 		}
 
 		gridLayout( galleryArray );
@@ -72,105 +69,11 @@ var setCollections = function() {
 	});
 };
 
-
-addCollection.addEventListener('click', function() {
-	if ( newEmptyCollection.value !== '' ) {
-		sets.push({setName: newEmptyCollection.value, images: []});
-		setCollections();
-	}
-});
-
-addIamge.addEventListener('click', function(e) {
-
-	if ( collectionDropdown.value !== 'All Images' && newCollection.value === '' ) {
-		sets.map( function( set ) {
-			if (set.setName === collectionDropdown.value) {
-				for (var i = 0;i<set.images.length;i++) {
-					if ( set.images[i] === srcImages.indexOf(slide)) {
-						modalAlert.innerHTML = '<div class="alert alert-warning" role="alert">Image already exist in this collection</div>';
-						return;
-					}
-				}
-				$('#addModal').modal('hide');
-				set.images.push( srcImages.indexOf(slide) );
-			}
-		});
-		
-	} else {
-		sets.push({setName: newCollection.value, images: [ srcImages.indexOf(slide) ] });
-		$('#addModal').modal('hide');
-	}
-
-	var destroyAlert = setTimeout( function() {
-		modalAlert.innerHTML = '';
-	}, 3000)
-
-	newCollection.value = '';
-	setCollections();
-
-});
-
-
-deleteCollection.addEventListener('click', function() {
-	var index;
-	for (var i = 0;i<sets.length;i++) {
-		if (sets[i].setName === currentGallery) {
-
-			index = sets.indexOf(sets[i]);
-			if (index > -1) {
-				sets.splice(index, 1);
-			}
-		}
-	};
-	content.classList.add("allimages");
-	gridLayout();
-	setCollections();
-	title.innerHTML = sets[0].setName + ' ('+ srcImages.length + ')';
-});
-
-var deleteImage = function() {
-	var index;
-	var updateCollection;
-	var newCollection = []
-
-	for (var i = 0;i<sets.length;i++) {
-		if (sets[i].setName === currentGallery) {
-
-			index = sets[i].images.indexOf(srcImages.indexOf(slide));
-			if (index > -1) {
-				sets[i].images.splice(index, 1);
-				updateCollection = sets[i].images
-			}
-		}
-	};
-
-	updateCollection.map (function( image) {
-		newCollection.push(srcImages[image])
-	})
-
-	var number = (updateCollection.length === undefined) ? 0 : updateCollection.length
-	title.innerHTML = currentGallery + '('+ updateCollection.length + ')';
-	gridLayout( newCollection );
-};
-
-var bindImages = function(i, kids) {
-	kids[i].addEventListener('click', function(e) {
-		var selectedImage = e.target
-		slide = selectedImage.parentNode.attributes[0].value;
-		var slideCont = '<img src="images/'+slide+'.jpg" />';
-		modalimage.innerHTML = slideCont;
-
-		if ( selectedImage.classList.contains("deleteImage") ) {
-			deleteImage();
-		}
-	});
-};
-//drops in default images
 var gridLayout = function(imageArray) {
 
 	if (imageArray === 'all' || imageArray === undefined ) {
 		imageArray = srcImages;
-		title.innerHTML += ' ('+ srcImages.length + ')'
+		title.innerHTML += ' ('+ srcImages.length + ')';
 	}
 
 	var li = '';
@@ -192,6 +95,99 @@ var gridLayout = function(imageArray) {
 	for (var i = 0;i<kids.length;i++) {
 		bindImages(i, kids);
 	}
+};
+
+addCollection.addEventListener('click', function() {
+	if ( newEmptyCollection.value !== '' ) {
+		sets.push({setName: newEmptyCollection.value, images: []});
+		setCollections();
+	}
+});
+
+addIamge.addEventListener('click', function() {
+
+	if ( collectionDropdown.value !== 'All Images' && newCollection.value === '' ) {
+		sets.map( function( set ) {
+			if (set.setName === collectionDropdown.value) {
+				for (var i = 0;i<set.images.length;i++) {
+					if ( set.images[i] === srcImages.indexOf(slide)) {
+						modalAlert.innerHTML = '<div class="alert alert-warning" role="alert">Image already exist in this collection</div>';
+						return;
+					}
+				}
+				$('#addModal').modal('hide');
+				set.images.push( srcImages.indexOf(slide) );
+			}
+		});
+		
+	} else {
+		sets.push({setName: newCollection.value, images: [ srcImages.indexOf(slide) ] });
+		$('#addModal').modal('hide');
+	}
+
+	destroyAlert = setTimeout( function() {
+		modalAlert.innerHTML = '';
+	}, 3000);
+
+	newCollection.value = '';
+	setCollections();
+
+});
+
+
+deleteCollection.addEventListener('click', function() {
+	var index;
+	for (var i = 0;i<sets.length;i++) {
+		if (sets[i].setName === currentGallery) {
+
+			index = sets.indexOf(sets[i]);
+			if (index > -1) {
+				sets.splice(index, 1);
+			}
+		}
+	}
+
+	content.classList.add('allimages');
+	gridLayout();
+	setCollections();
+	title.innerHTML = sets[0].setName + ' ('+ srcImages.length + ')';
+});
+
+var deleteImage = function() {
+	var index;
+	var updateCollection;
+	var newCollection = [];
+
+	for (var i = 0;i<sets.length;i++) {
+		if (sets[i].setName === currentGallery) {
+
+			index = sets[i].images.indexOf(srcImages.indexOf(slide));
+			if (index > -1) {
+				sets[i].images.splice(index, 1);
+				updateCollection = sets[i].images;
+			}
+		}
+	}
+
+	updateCollection.map (function( image) {
+		newCollection.push(srcImages[image]);
+	});
+
+	title.innerHTML = currentGallery + '('+ updateCollection.length + ')';
+	gridLayout( newCollection );
+};
+
+var bindImages = function(i, kids) {
+	kids[i].addEventListener('click', function(e) {
+		var selectedImage = e.target;
+		slide = selectedImage.parentNode.attributes[0].value;
+		var slideCont = '<img src="images/'+slide+'.jpg" />';
+		modalimage.innerHTML = slideCont;
+
+		if ( selectedImage.classList.contains('deleteImage') ) {
+			deleteImage();
+		}
+	});
 };
 
 var init = function() {
