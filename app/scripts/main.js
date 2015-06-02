@@ -7,6 +7,7 @@ var title = document.getElementById('title');
 var addIamge = document.getElementById('addIamge');
 var collectionDropdown = document.getElementById('collectionDropdown');
 var newCollection = document.getElementById('newCollection');
+var modalAlert = document.getElementById('modalAlert');
 var srcImages = ['Slides_004','Slides_032','Slides_066','Slides_067','Slides_070','Slides_073','Slides_074','Slides_086','Slides_098','Slides_102','Slides_106','Slides_111','Slides_113','Slides_119','Slides_120','Slides_127','Slides_129','Slides_130','Slides_131','Slides_133'];
 var sets = [
 		{
@@ -61,16 +62,28 @@ var setCollections = function() {
 
 
 addIamge.addEventListener('click', function(e) {
+
 	if ( collectionDropdown.value !== 'All Images' && newCollection.value === '' ) {
 		sets.map( function( set ) {
 			if (set.setName === collectionDropdown.value) {
-				set.images.push( srcImages.indexOf(slide) )
+				for (var i = 0;i<set.images.length;i++) {
+					if ( set.images[i] === srcImages.indexOf(slide)) {
+						modalAlert.innerHTML = '<div class="alert alert-warning" role="alert">Image already exist in this collection</div>';
+						return;
+					}
+				}
+				$('#myModal').modal('hide');
+				set.images.push( srcImages.indexOf(slide) );
 			}
 		});
 		
 	} else {
 		sets.push({setName: newCollection.value, images: [ srcImages.indexOf(slide) ] })
 	}
+
+	var destroyAlert = setTimeout( function() {
+		modalAlert.innerHTML = '';
+	}, 3000)
 
 	newCollection.value = '';
 	setCollections();
