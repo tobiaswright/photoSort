@@ -1,4 +1,5 @@
 /* jshint devel:true */
+(function () {
 'use strict';
 var gallery = document.getElementById('gallery');
 var nav = document.getElementById('nav');
@@ -8,7 +9,6 @@ var addIamge = document.getElementById('addIamge');
 var collectionDropdown = document.getElementById('collectionDropdown');
 var newCollection = document.getElementById('newCollection');
 var modalAlert = document.getElementById('modalAlert');
-var deleteImage = document.getElementById('deleteImage');
 var addCollection = document.getElementById('addCollection');
 var newEmptyCollection = document.getElementById('newEmptyCollection');
 var content = document.getElementById('content');
@@ -19,6 +19,7 @@ var kids;
 var slide;
 var currentGallery;
 var destroyAlert;
+var deleteImage;
 
 var bindImages = function(i, kids) {
 	kids[i].addEventListener('click', function(e) {
@@ -106,7 +107,7 @@ var setCollections = function() {
 	});
 };
 
-var deleteImage = function() {
+deleteImage = function() {
 	var index;
 	var updateCollection;
 	var newCollection = [];
@@ -197,3 +198,4 @@ var init = function() {
 };
 
 init();
+}());
