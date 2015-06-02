@@ -49,14 +49,14 @@ $icon-font-path: '../bower_components/bootstrap-sass-official/assets/fonts/boots
       }
     }
   }
-
-  &.allimages {
-    .glyphicon-minus-sign {
-      display: none
-    }
-  }
 }
 
+.allimages {
+  .glyphicon-minus-sign, #deleteCollectionLink {
+    display: none
+  }
+}
+  
 .galleryimg {
   width: 100%;
 }
@@ -65,5 +65,15 @@ $icon-font-path: '../bower_components/bootstrap-sass-official/assets/fonts/boots
   margin-bottom: 20px;
   img {
     width: 100%;
+  }
+}
+
+#allLink, #deleteCollectionLink {
+  color: #337ab7;
+
+  &:hover {
+    color: #23527c;
+    text-decoration: underline;
+    cursor: pointer;
   }
 }

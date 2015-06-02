@@ -9,6 +9,10 @@ var collectionDropdown = document.getElementById('collectionDropdown');
 var newCollection = document.getElementById('newCollection');
 var modalAlert = document.getElementById('modalAlert');
 var deleteImage = document.getElementById('deleteImage');
+var addCollection = document.getElementById('addCollection');
+var newEmptyCollection = document.getElementById('newEmptyCollection');
+var content = document.getElementById('content');
+var deleteCollection = document.getElementById('deleteCollection')
 var srcImages = ['Slides_004','Slides_032','Slides_066','Slides_067','Slides_070','Slides_073','Slides_074','Slides_086','Slides_098','Slides_102','Slides_106','Slides_111','Slides_113','Slides_119','Slides_120','Slides_127','Slides_129','Slides_130','Slides_131','Slides_133'];
 var sets = [
 		{
@@ -45,17 +49,22 @@ var setCollections = function() {
 
 		if ( currentGallery === 'All Images') {
 			galleryArray = 'all';
-			gallery.classList.add("allimages");
+			content.classList.add("allimages");
 		} else {
 			sets.map( function( set ) {
 				if (set.setName === currentGallery) {
-					title.innerHTML += '('+ set.images.length + ')';
+					var number = (set.images === undefined) ? 0 : set.images.length
+					title.innerHTML += '('+ number + ')';
+
+					if (!set.images) {
+						return;
+					}
 					set.images.map( function(images) {
 						galleryArray.push(srcImages[images]);
 					});
 				}
 			});
-			gallery.classList.remove("allimages");
+			content.classList.remove("allimages");
 		}
 
 		gridLayout( galleryArray );
@@ -63,6 +72,13 @@ var setCollections = function() {
 	});
 };
 
+
+addCollection.addEventListener('click', function() {
+	if ( newEmptyCollection.value !== '' ) {
+		sets.push({setName: newEmptyCollection.value, images: []});
+		setCollections();
+	}
+});
 
 addIamge.addEventListener('click', function(e) {
 
@@ -75,14 +91,14 @@ addIamge.addEventListener('click', function(e) {
 						return;
 					}
 				}
-				$('#myModal').modal('hide');
+				$('#addModal').modal('hide');
 				set.images.push( srcImages.indexOf(slide) );
 			}
 		});
 		
 	} else {
 		sets.push({setName: newCollection.value, images: [ srcImages.indexOf(slide) ] });
-		$('#myModal').modal('hide');
+		$('#addModal').modal('hide');
 	}
 
 	var destroyAlert = setTimeout( function() {
@@ -94,6 +110,23 @@ addIamge.addEventListener('click', function(e) {
 
 });
 
+
+deleteCollection.addEventListener('click', function() {
+	var index;
+	for (var i = 0;i<sets.length;i++) {
+		if (sets[i].setName === currentGallery) {
+
+			index = sets.indexOf(sets[i]);
+			if (index > -1) {
+				sets.splice(index, 1);
+			}
+		}
+	};
+	content.classList.add("allimages");
+	gridLayout();
+	setCollections();
+	title.innerHTML = sets[0].setName + ' ('+ srcImages.length + ')';
+});
 
 var deleteImage = function() {
 	var index;
@@ -115,7 +148,8 @@ var deleteImage = function() {
 		newCollection.push(srcImages[image])
 	})
 
-
+	var number = (updateCollection.length === undefined) ? 0 : updateCollection.length
+	title.innerHTML = currentGallery + '('+ updateCollection.length + ')';
 	gridLayout( newCollection );
 };
 
