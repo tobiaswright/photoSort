@@ -56,7 +56,11 @@ $icon-font-path: '../bower_components/bootstrap-sass-official/assets/fonts/boots
     display: none
   }
 }
-  
+
+.col-md-2 {
+  margin-top: 20px;
+}
+
 .galleryimg {
   width: 100%;
 }
