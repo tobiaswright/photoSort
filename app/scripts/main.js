@@ -1,25 +1,26 @@
 /* jshint devel:true */
 (function () {
 'use strict';
-var gallery = document.getElementById('gallery');
-var nav = document.getElementById('nav');
-var modalimage = document.getElementById('modalimage');
-var title = document.getElementById('title');
+var addCollection = document.getElementById('addCollection');
 var addIamge = document.getElementById('addIamge');
 var collectionDropdown = document.getElementById('collectionDropdown');
-var newCollection = document.getElementById('newCollection');
-var modalAlert = document.getElementById('modalAlert');
-var addCollection = document.getElementById('addCollection');
-var newEmptyCollection = document.getElementById('newEmptyCollection');
 var content = document.getElementById('content');
 var deleteCollection = document.getElementById('deleteCollection');
+var gallery = document.getElementById('gallery');
+var modalAlert = document.getElementById('modalAlert');
+var modalimage = document.getElementById('modalimage');
+var nav = document.getElementById('nav');
+var newEmptyCollection = document.getElementById('newEmptyCollection');
+var newCollection = document.getElementById('newCollection');
+var title = document.getElementById('title');
+
+var currentGallery;
 var srcImages = ['Slides_004','Slides_032','Slides_066','Slides_067','Slides_070','Slides_073','Slides_074','Slides_086','Slides_098','Slides_102','Slides_106','Slides_111','Slides_113','Slides_119','Slides_120','Slides_127','Slides_129','Slides_130','Slides_131','Slides_133'];
-var sets = [{setName: 'All Images'}];
+
+var deleteImage;
+var destroyAlert;
 var kids;
 var slide;
-var currentGallery;
-var destroyAlert;
-var deleteImage;
 
 var bindImages = function(i, kids) {
 	kids[i].addEventListener('click', function(e) {
