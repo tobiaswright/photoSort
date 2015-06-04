@@ -15,9 +15,9 @@ var newCollection = document.getElementById('newCollection');
 var title = document.getElementById('title');
 
 var srcImages = ['Slides_004','Slides_032','Slides_066','Slides_067','Slides_070','Slides_073','Slides_074','Slides_086','Slides_098','Slides_102','Slides_106','Slides_111','Slides_113','Slides_119','Slides_120','Slides_127','Slides_129','Slides_130','Slides_131','Slides_133'];
+var sets = [{setName: 'All Images'}];
 
 var currentGallery;
-var deleteImage;
 var destroyAlert;
 var kids;
 var slide;
@@ -30,7 +30,7 @@ var bindImages = function(i, kids) {
 		modalimage.innerHTML = slideCont;
 
 		if ( selectedImage.classList.contains('deleteImage') ) {
-			deleteImage();
+			action.deleteImage();
 		}
 	});
 };
@@ -108,31 +108,31 @@ var setCollections = function() {
 	});
 };
 
-deleteImage = function() {
-	var index;
-	var updateCollection;
-	var newCollection = [];
+var action = {
+	deleteImage: function() {
+		var index;
+		var updateCollection;
+		var newCollection = [];
 
-	for (var i = 0;i<sets.length;i++) {
-		if (sets[i].setName === currentGallery) {
+		for (var i = 0;i<sets.length;i++) {
+			if (sets[i].setName === currentGallery) {
 
-			index = sets[i].images.indexOf(srcImages.indexOf(slide));
-			if (index > -1) {
-				sets[i].images.splice(index, 1);
-				updateCollection = sets[i].images;
+				index = sets[i].images.indexOf(srcImages.indexOf(slide));
+				if (index > -1) {
+					sets[i].images.splice(index, 1);
+					updateCollection = sets[i].images;
+				}
 			}
 		}
-	}
 
-	updateCollection.map (function( image) {
-		newCollection.push(srcImages[image]);
-	});
+		updateCollection.map (function( image) {
+			newCollection.push(srcImages[image]);
+		});
 
-	title.innerHTML = currentGallery + '('+ updateCollection.length + ')';
-	gridLayout( newCollection );
-};
+		title.innerHTML = currentGallery + '('+ updateCollection.length + ')';
+		gridLayout( newCollection );
+	},
 
-var action = {
 	addCollection: function() {
 		if ( newEmptyCollection.value !== '' ) {
 			sets.push({setName: newEmptyCollection.value, images: []});
