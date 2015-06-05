@@ -126,6 +126,7 @@ var action = {
 
 	deleteImage: function() {
 		var newCollection = [];
+		var collectionImage;
 		var index;
 		var liveCollection;
 		var updateCollection;
