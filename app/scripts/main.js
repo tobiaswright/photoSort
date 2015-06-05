@@ -4,9 +4,9 @@
 var addCollection = document.getElementById('addCollection');
 var addIamge = document.getElementById('addIamge');
 var collectionDropdown = document.getElementById('collectionDropdown');
+var collectionGrid = document.getElementById('collectionGrid');
 var content = document.getElementById('content');
 var deleteCollection = document.getElementById('deleteCollection');
-var gallery = document.getElementById('gallery');
 var modalAlert = document.getElementById('modalAlert');
 var modalimage = document.getElementById('modalimage');
 var nav = document.getElementById('nav');
@@ -35,15 +35,18 @@ var bindImages = function(i, kids) {
 	});
 };
 
-var gridLayout = function(imageArray) {
 
+//Lays out the grid, argument is optional if you want a different grid than the default.
+var setLayout = function(imageArray) {
+	var li = '';
+
+	//check to see if an array was passed in
 	if (imageArray === 'all' || imageArray === undefined ) {
 		imageArray = srcImages;
 		title.innerHTML += ' ('+ srcImages.length + ')';
 	}
 
-	var li = '';
-
+	//TODO: move to a template
 	imageArray.map( function (image) {
 		li += '<li data-img="'+image+'">';
 		li += '<div></div>';
@@ -54,15 +57,24 @@ var gridLayout = function(imageArray) {
 	});
 
 
-	gallery.innerHTML = li;
+	collectionGrid.innerHTML = li;
 
-	kids = gallery.children;
+	kids = collectionGrid.children;
 
 	for (var i = 0;i<kids.length;i++) {
 		bindImages(i, kids);
 	}
 };
 
+var findCollection = function( collection ) {
+	for (var i = 0;i<sets.length;i++) {
+		if (sets[i].setName === collection) {
+			return sets[i];
+		}
+	}
+};
+
+//used for both the navigation of collections and the dropdown.
 var setCollections = function() {
 	var navli = '';
 	var options = '';
@@ -75,7 +87,11 @@ var setCollections = function() {
 	collectionDropdown.innerHTML = options;
 	nav.innerHTML = navli;
 
-	nav.addEventListener('click', function(e) {
+	nav.addEventListener('click', action.selectCollection);
+};
+
+var action = {
+	selectCollection: function(e) {
 		e.preventDefault();
 
 		var galleryArray = [];
@@ -83,6 +99,7 @@ var setCollections = function() {
 
 		title.innerHTML = currentGallery;
 
+		//sets defualt collection
 		if ( currentGallery === 'All Images') {
 			galleryArray = 'all';
 			content.classList.add('allimages');
@@ -103,26 +120,28 @@ var setCollections = function() {
 			content.classList.remove('allimages');
 		}
 
-		gridLayout( galleryArray );
+		setLayout( galleryArray );
 
-	});
-};
+	},
 
-var action = {
 	deleteImage: function() {
-		var index;
-		var updateCollection;
 		var newCollection = [];
+		var index;
+		var liveCollection;
+		var updateCollection;
+		
 
-		for (var i = 0;i<sets.length;i++) {
-			if (sets[i].setName === currentGallery) {
+		liveCollection = findCollection( currentGallery );
 
-				index = sets[i].images.indexOf(srcImages.indexOf(slide));
-				if (index > -1) {
-					sets[i].images.splice(index, 1);
-					updateCollection = sets[i].images;
-				}
-			}
+		collectionImage = liveCollection.images;
+
+		index = collectionImage.indexOf(srcImages.indexOf(slide));
+
+		//checks to see if image is in array
+		//TODO: Decide what to do if for some crazt reason the image doesen't exsist.
+		if (index > -1) {
+			collectionImage.splice(index, 1);
+			updateCollection = collectionImage;
 		}
 
 		updateCollection.map (function( image) {
@@ -130,7 +149,7 @@ var action = {
 		});
 
 		title.innerHTML = currentGallery + '('+ updateCollection.length + ')';
-		gridLayout( newCollection );
+		setLayout( newCollection );
 	},
 
 	addCollection: function() {
@@ -153,7 +172,7 @@ var action = {
 		}
 
 		content.classList.add('allimages');
-		gridLayout();
+		setLayout();
 		setCollections();
 		title.innerHTML = sets[0].setName + ' ('+ srcImages.length + ')';
 	},
@@ -194,7 +213,7 @@ var init = function() {
 	addIamge.addEventListener('click', action.addImage );
 	deleteCollection.addEventListener('click', action.deleteCollection );
 
-	gridLayout();
+	setLayout();
 	setCollections();
 };
 
