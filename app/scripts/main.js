@@ -17,7 +17,7 @@ var title = document.getElementById('title');
 var srcImages = ['Slides_004','Slides_032','Slides_066','Slides_067','Slides_070','Slides_073','Slides_074','Slides_086','Slides_098','Slides_102','Slides_106','Slides_111','Slides_113','Slides_119','Slides_120','Slides_127','Slides_129','Slides_130','Slides_131','Slides_133'];
 var sets = [{setName: 'All Images'}];
 
-var currentGallery;
+var currentCollection;
 var destroyAlert;
 var kids;
 var slide;
@@ -95,17 +95,17 @@ var action = {
 		e.preventDefault();
 
 		var galleryArray = [];
-		currentGallery = e.target.textContent;
+		currentCollection = e.target.textContent;
 
-		title.innerHTML = currentGallery;
+		title.innerHTML = currentCollection;
 
 		//sets defualt collection
-		if ( currentGallery === 'All Images') {
+		if ( currentCollection === 'All Images') {
 			galleryArray = 'all';
 			content.classList.add('allimages');
 		} else {
 			sets.map( function( set ) {
-				if (set.setName === currentGallery) {
+				if (set.setName === currentCollection) {
 					var number = (set.images === undefined) ? 0 : set.images.length;
 					title.innerHTML += '('+ number + ')';
 
@@ -126,30 +126,28 @@ var action = {
 
 	deleteImage: function() {
 		var newCollection = [];
-		var collectionImage;
 		var index;
-		var liveCollection;
+		var thisCollection;
+		var thisImage;
 		var updateCollection;
 		
 
-		liveCollection = findCollection( currentGallery );
-
-		collectionImage = liveCollection.images;
-
-		index = collectionImage.indexOf(srcImages.indexOf(slide));
+		thisCollection = findCollection( currentCollection );
+		thisImage = thisCollection.images;
+		index = thisImage.indexOf(srcImages.indexOf(slide));
 
 		//checks to see if image is in array
 		//TODO: Decide what to do if for some crazt reason the image doesen't exsist.
 		if (index > -1) {
-			collectionImage.splice(index, 1);
-			updateCollection = collectionImage;
+			thisImage.splice(index, 1);
+			updateCollection = thisImage;
 		}
 
 		updateCollection.map (function( image) {
 			newCollection.push(srcImages[image]);
 		});
 
-		title.innerHTML = currentGallery + '('+ updateCollection.length + ')';
+		title.innerHTML = currentCollection + '('+ updateCollection.length + ')';
 		setLayout( newCollection );
 	},
 
@@ -162,14 +160,13 @@ var action = {
 
 	deleteCollection: function() {
 		var index;
-		for (var i = 0;i<sets.length;i++) {
-			if (sets[i].setName === currentGallery) {
+		var thisCollection;
 
-				index = sets.indexOf(sets[i]);
-				if (index > -1) {
-					sets.splice(index, 1);
-				}
-			}
+		thisCollection = findCollection( currentCollection );
+		index = sets.indexOf( thisCollection );
+
+		if (index > -1) {
+			sets.splice(index, 1);
 		}
 
 		content.classList.add('allimages');
@@ -179,19 +176,20 @@ var action = {
 	},
 
 	addImage: function() {
+		var thisCollection;
+
 		if ( collectionDropdown.value !== 'All Images' && newCollection.value === '' ) {
-			sets.map( function( set ) {
-				if (set.setName === collectionDropdown.value) {
-					for (var i = 0;i<set.images.length;i++) {
-						if ( set.images[i] === srcImages.indexOf(slide)) {
-							modalAlert.innerHTML = '<div class="alert alert-warning" role="alert">Image already exist in this collection</div>';
-							return;
-						}
-					}
-					$('#addModal').modal('hide');
-					set.images.push( srcImages.indexOf(slide) );
+
+			thisCollection = findCollection( collectionDropdown.value );
+
+			for (var i = 0;i<thisCollection.images.length;i++) {
+				if ( thisCollection.images[i] === srcImages.indexOf(slide)) {
+					modalAlert.innerHTML = '<div class="alert alert-warning" role="alert">Image already exist in this collection</div>';
+					return;
 				}
-			});
+			}
+			$('#addModal').modal('hide');
+			thisCollection.images.push( srcImages.indexOf(slide) );
 			
 		} else {
 			sets.push({setName: newCollection.value, images: [ srcImages.indexOf(slide) ] });
