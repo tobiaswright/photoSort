@@ -14,19 +14,23 @@ var newEmptyCollection = document.getElementById('newEmptyCollection');
 var newCollection = document.getElementById('newCollection');
 var title = document.getElementById('title');
 
-var srcImages = ['Slides_004','Slides_032','Slides_066','Slides_067','Slides_070','Slides_073','Slides_074','Slides_086','Slides_098','Slides_102','Slides_106','Slides_111','Slides_113','Slides_119','Slides_120','Slides_127','Slides_129','Slides_130','Slides_131','Slides_133'];
 var collections = [{name: 'All Images'}];
+var defaultClass = 'allimages';
+var srcImages = ['Slides_004','Slides_032','Slides_066','Slides_067','Slides_070','Slides_073','Slides_074','Slides_086','Slides_098','Slides_102','Slides_106','Slides_111','Slides_113','Slides_119','Slides_120','Slides_127','Slides_129','Slides_130','Slides_131','Slides_133'];
 
 var currentCollection;
 var destroyAlert;
-var kids;
+var cells;
 var slide;
 
-var bindImages = function(i, kids) {
-	kids[i].addEventListener('click', function(e) {
-		var selectedImage = e.target;
+var bindImages = function(i, cells) {
+	var selectedImage;
+	var slideCont
+
+	cells[i].addEventListener('click', function(e) {
+		selectedImage = e.target;
 		slide = selectedImage.parentNode.attributes[0].value;
-		var slideCont = '<img src="images/'+slide+'.jpg" />';
+		slideCont = '<img src="images/'+slide+'.jpg" />';
 		modalimage.innerHTML = slideCont;
 
 		if ( selectedImage.classList.contains('deleteImage') ) {
@@ -59,10 +63,10 @@ var setLayout = function(imageArray) {
 
 	collectionGrid.innerHTML = li;
 
-	kids = collectionGrid.children;
+	cells = collectionGrid.children;
 
-	for (var i = 0;i<kids.length;i++) {
-		bindImages(i, kids);
+	for (var i = 0;i<cells.length;i++) {
+		bindImages(i, cells);
 	}
 };
 
@@ -102,7 +106,7 @@ var action = {
 		//collections defualt collection
 		if ( currentCollection === 'All Images') {
 			galleryArray = 'all';
-			content.classList.add('allimages');
+			content.classList.add( defaultClass );
 		} else {
 			collections.map( function( set ) {
 				if (set.name === currentCollection) {
@@ -117,7 +121,7 @@ var action = {
 					});
 				}
 			});
-			content.classList.remove('allimages');
+			content.classList.remove( defaultClass );
 		}
 
 		setLayout( galleryArray );
@@ -169,7 +173,7 @@ var action = {
 			collections.splice(index, 1);
 		}
 
-		content.classList.add('allimages');
+		content.classList.add( defaultClass );
 		setLayout();
 		setCollections();
 		title.innerHTML = collections[0].name + ' ('+ srcImages.length + ')';
