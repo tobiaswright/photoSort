@@ -15,7 +15,7 @@ var newCollection = document.getElementById('newCollection');
 var title = document.getElementById('title');
 
 var srcImages = ['Slides_004','Slides_032','Slides_066','Slides_067','Slides_070','Slides_073','Slides_074','Slides_086','Slides_098','Slides_102','Slides_106','Slides_111','Slides_113','Slides_119','Slides_120','Slides_127','Slides_129','Slides_130','Slides_131','Slides_133'];
-var sets = [{setName: 'All Images'}];
+var collections = [{name: 'All Images'}];
 
 var currentCollection;
 var destroyAlert;
@@ -67,9 +67,9 @@ var setLayout = function(imageArray) {
 };
 
 var findCollection = function( collection ) {
-	for (var i = 0;i<sets.length;i++) {
-		if (sets[i].setName === collection) {
-			return sets[i];
+	for (var i = 0;i<collections.length;i++) {
+		if (collections[i].name === collection) {
+			return collections[i];
 		}
 	}
 };
@@ -79,9 +79,9 @@ var setCollections = function() {
 	var navli = '';
 	var options = '';
 
-	sets.map( function( nav ) {
-		navli += '<li><a>'+nav.setName+'</a></li>';
-		options += '<option value="'+nav.setName+'">'+nav.setName+'</option>';
+	collections.map( function( nav ) {
+		navli += '<li><a>'+nav.name+'</a></li>';
+		options += '<option value="'+nav.name+'">'+nav.name+'</option>';
 	});
 
 	collectionDropdown.innerHTML = options;
@@ -99,13 +99,13 @@ var action = {
 
 		title.innerHTML = currentCollection;
 
-		//sets defualt collection
+		//collections defualt collection
 		if ( currentCollection === 'All Images') {
 			galleryArray = 'all';
 			content.classList.add('allimages');
 		} else {
-			sets.map( function( set ) {
-				if (set.setName === currentCollection) {
+			collections.map( function( set ) {
+				if (set.name === currentCollection) {
 					var number = (set.images === undefined) ? 0 : set.images.length;
 					title.innerHTML += '('+ number + ')';
 
@@ -153,7 +153,7 @@ var action = {
 
 	addCollection: function() {
 		if ( newEmptyCollection.value !== '' ) {
-			sets.push({setName: newEmptyCollection.value, images: []});
+			collections.push({name: newEmptyCollection.value, images: []});
 			setCollections();
 		}
 	},
@@ -163,16 +163,16 @@ var action = {
 		var thisCollection;
 
 		thisCollection = findCollection( currentCollection );
-		index = sets.indexOf( thisCollection );
+		index = collections.indexOf( thisCollection );
 
 		if (index > -1) {
-			sets.splice(index, 1);
+			collections.splice(index, 1);
 		}
 
 		content.classList.add('allimages');
 		setLayout();
 		setCollections();
-		title.innerHTML = sets[0].setName + ' ('+ srcImages.length + ')';
+		title.innerHTML = collections[0].name + ' ('+ srcImages.length + ')';
 	},
 
 	addImage: function() {
@@ -192,7 +192,7 @@ var action = {
 			thisCollection.images.push( srcImages.indexOf(slide) );
 			
 		} else {
-			sets.push({setName: newCollection.value, images: [ srcImages.indexOf(slide) ] });
+			collections.push({name: newCollection.value, images: [ srcImages.indexOf(slide) ] });
 			$('#addModal').modal('hide');
 		}
 
