@@ -14,9 +14,12 @@ var newEmptyCollection = document.getElementById('newEmptyCollection');
 var newCollection = document.getElementById('newCollection');
 var title = document.getElementById('title');
 
-var collections = [{name: 'All Images'}];
+
+var defaultTitle = 'All Images';
 var defaultClass = 'allimages';
 var srcImages = ['Slides_004','Slides_032','Slides_066','Slides_067','Slides_070','Slides_073','Slides_074','Slides_086','Slides_098','Slides_102','Slides_106','Slides_111','Slides_113','Slides_119','Slides_120','Slides_127','Slides_129','Slides_130','Slides_131','Slides_133'];
+
+var collections = [{name: defaultTitle}];
 
 var currentCollection;
 var destroyAlert;
@@ -104,7 +107,7 @@ var action = {
 		title.innerHTML = currentCollection;
 
 		//collections defualt collection
-		if ( currentCollection === 'All Images') {
+		if ( currentCollection === defaultTitle ) {
 			galleryArray = 'all';
 			content.classList.add( defaultClass );
 		} else {
@@ -173,7 +176,7 @@ var action = {
 			collections.splice(index, 1);
 		}
 
-		content.classList.add( defaultClass );
+		contentaam( defaultClass );
 		setLayout();
 		setCollections();
 		title.innerHTML = collections[0].name + ' ('+ srcImages.length + ')';
@@ -182,7 +185,7 @@ var action = {
 	addImage: function() {
 		var thisCollection;
 
-		if ( collectionDropdown.value !== 'All Images' && newCollection.value === '' ) {
+		if ( collectionDropdown.value !== defaultTitle && newCollection.value === '' ) {
 
 			thisCollection = findCollection( collectionDropdown.value );
 
