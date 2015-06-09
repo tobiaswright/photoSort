@@ -73,9 +73,10 @@ var setLayout = function(imageArray) {
 	}
 };
 
-var findCollection = function( collection ) {
+var findCollection = function() {
+	console.log(this)
 	for (var i = 0;i<collections.length;i++) {
-		if (collections[i].name === collection) {
+		if (collections[i].name === this) {
 			return collections[i];
 		}
 	}
@@ -139,7 +140,7 @@ var action = {
 		var updateCollection;
 		
 
-		thisCollection = findCollection( currentCollection );
+		thisCollection = findCollection.call( currentCollection );
 		thisImage = thisCollection.images;
 		index = thisImage.indexOf(srcImages.indexOf(slide));
 
@@ -169,14 +170,14 @@ var action = {
 		var index;
 		var thisCollection;
 
-		thisCollection = findCollection( currentCollection );
+		thisCollection = findCollection.call( currentCollection );
 		index = collections.indexOf( thisCollection );
 
 		if (index > -1) {
 			collections.splice(index, 1);
 		}
 
-		contentaam( defaultClass );
+		content.classList.add( defaultClass );
 		setLayout();
 		setCollections();
 		title.innerHTML = collections[0].name + ' ('+ srcImages.length + ')';
@@ -187,7 +188,7 @@ var action = {
 
 		if ( collectionDropdown.value !== defaultTitle && newCollection.value === '' ) {
 
-			thisCollection = findCollection( collectionDropdown.value );
+			thisCollection = findCollection.call( collectionDropdown.value );
 
 			for (var i = 0;i<thisCollection.images.length;i++) {
 				if ( thisCollection.images[i] === srcImages.indexOf(slide)) {
